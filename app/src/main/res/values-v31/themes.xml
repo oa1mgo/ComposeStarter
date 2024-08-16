@@ -2,7 +2,8 @@
 <resources>
 
     <style name="Theme.ComposeStater" parent="android:Theme.Material.NoActionBar">
-        <item name="android:windowSplashScreenBackground">@color/background</item>
+        <item name="android:windowSplashScreenBackground">@color/splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/news_avd_v02</item>
     </style>
 
 </resources>

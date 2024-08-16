@@ -2,6 +2,7 @@ package net.taikula.compose.starter.splash
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock.sleep
 import androidx.activity.compose.setContent
@@ -27,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.taikula.compose.starter.MainActivity
@@ -36,36 +38,40 @@ import net.taikula.compose.starter.ui.theme.ComposeStaterTheme
 import kotlin.math.ceil
 
 @SuppressLint("CustomSplashScreen")
-class SplashActivity : BaseComponentActivity() {
+class SplashCompactActivity : BaseComponentActivity(), CoroutineScope by CoroutineScope(Dispatchers.Main) {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         installSplashScreen()
-        setContent {
-            ComposeStaterTheme {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(colorScheme.background)
-                ) {
-                    var hasFinish by remember { mutableStateOf(false) }
-                    CountdownText(
+        super.onCreate(savedInstanceState)
+        if (Build.VERSION_CODES.S <= Build.VERSION.SDK_INT) {
+            startActivity(Intent(this@SplashCompactActivity, MainActivity::class.java))
+        } else {
+            setContent {
+                ComposeStaterTheme {
+                    Box(
                         modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(16.dp),
-                        initialTime = 5_000L,
+                            .fillMaxSize()
+                            .background(colorScheme.background)
                     ) {
-                        if (hasFinish) {
-                            return@CountdownText
+                        var hasFinish by remember { mutableStateOf(false) }
+                        CountdownText(
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(16.dp),
+                            initialTime = 5_000L,
+                        ) {
+                            if (hasFinish) {
+                                return@CountdownText
+                            }
+                            hasFinish = true
+                            startActivity(Intent(this@SplashCompactActivity, MainActivity::class.java))
+                            finish()
                         }
-                        hasFinish = true
-                        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                        finish()
+                        Image(
+                            modifier = Modifier.align(Alignment.Center),
+                            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                            contentDescription = ""
+                        )
                     }
-                    Image(
-                        modifier = Modifier.align(Alignment.Center),
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                        contentDescription = ""
-                    )
                 }
             }
         }

@@ -14,14 +14,13 @@
         android:theme="@style/Theme.ComposeStater"
         tools:targetApi="31">
         <activity
-            android:name=".splash.SplashActivity"
+            android:name=".splash.SplashCompactActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity android:name=".MainActivity" />
     </application>
